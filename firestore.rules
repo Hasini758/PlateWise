@@ -1,0 +1,49 @@
+// =====================================================================
+// firestore.rules — WHO is allowed to read or change WHAT in the database
+// Paste this whole file into Firebase console → Firestore Database → Rules → Publish
+// =====================================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isStaff() {
+      return signedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'staff';
+    }
+
+    // Profiles: you can read and edit only your own. Mess staff can read everyone's.
+    // Nobody can make themselves "staff" from the website: that's done in the Firebase console.
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isStaff());
+      allow create: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == 'student';
+      allow update: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role;
+
+      // Your meal marks: only you can change them, staff can read them
+      match /plans/{day} {
+        allow read: if signedIn() && (request.auth.uid == uid || isStaff());
+        allow write: if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // Ratings: you can write and read your own. Staff can read all of them.
+    match /ratings/{id} {
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isStaff());
+      allow create, update: if signedIn() && request.resource.data.uid == request.auth.uid
+                            && request.resource.data.stars >= 1 && request.resource.data.stars <= 5;
+    }
+
+    // Hostel totals: every signed-in student can read them and add their own +1 / -1
+    match /counts/{id} {
+      allow read, write: if signedIn();
+    }
+
+    // Messages from the mess committee: everyone reads, only staff write
+    match /notices/{hostel} {
+      allow read: if signedIn();
+      allow write: if isStaff();
+    }
+  }
+}

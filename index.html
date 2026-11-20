@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+  index.html — the SKELETON of the website.
+  It is almost empty on purpose: JavaScript (app.js) fills the
+  <div id="app"> box with whichever screen you are on.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- This line makes the site fit phone screens properly (no zooming out) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1F8A5B">
+  <meta name="description" content="PlateWise – tell your hostel mess if you're eating, so they cook just enough.">
+  <title>PlateWise – Mark your meal. Save the food.</title>
+
+  <!-- Font used in the Figma design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- All colours, sizes and layouts -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F8A5B'/%3E%3Cpath d='M15 24a6 6 0 0 1-1-11.9c5-1 6.3-1.4 8-3.6.9 1.7 1.8 3.6 1.8 7 0 4.8-4.2 8.5-8.8 8.5Z M8 25c0-2.6 1.6-4.7 4.4-5.2 2.1-.4 4.3-1.7 5.2-2.6' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- Every screen is drawn inside this box -->
+  <div id="app"></div>
+
+  <!-- Small pop-up message ("Plan saved!") -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Firebase (the online database). If there's no internet, the app falls back to offline mode. -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- The "brain": settings, data, database, then the screens -->
+  <script src="firebase-config.js"></script>
+  <script src="data.js"></script>
+  <script src="backend.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
